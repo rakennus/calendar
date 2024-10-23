@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to HTML Table</title>
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0
+        }
+
+        .parent {
+            display: flex;
+            /* Makes the children inline and responsive */
+            justify-content: space-between;
+            /* Space between items (optional) */
+            background-color: white;
+        }
+
+        .child {
+            flex: 1;
+            /* Makes each child take up equal width */
+            margin: 5px;
+            /* Adds some space between child divs */
+            box-sizing: border-box;
+            /* Ensures padding/margin/border is included in the width */
+            overflow: hidden;
+        }
+
+        .event {
+
+        }
+
+        .VO {
+            background-color: blue;
+            color: white;
+        }
+
+        .KO, .TU {
+            background-color: yellow;
+            color: black;
+        }
+
+        .LU, .SE {
+            background-color: lightblue;
+            color: black;
+        }
+
+        .UE {
+            background-color: lightgreen;
+            color: black;
+        }
+
+        .child-text {
+            overflow: hidden;
+            height: 3lh;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 600px) {
+            .parent {
+                flex-direction: column;
+                /* Stacks children vertically on smaller screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>CSV Data to Table</h1>
+        <input type="file" id="csvFile" accept=".csv">
+    </div>
+
+    <div class="parent">
+        <div class="child">
+            <h1>Item 1</h1>
+            <div class="child-text">
+                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
+            </div>
+            <h2>end</h2>
+        </div>
+        <div class="child">
+            <h1>Item 2</h1>
+            <div class="child-text">
+                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
+            </div>
+            <h2>end</h2>
+        </div>
+        <div class="child">
+            <h1>Item 3</h1>
+            <div class="child-text">
+                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
+            </div>
+            <h2>end</h2>
+        </div>
+        <div class="child">
+            <h1>Item 4</h1>
+            <div class="child-text">
+                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
+            </div>
+            <h2>end</h2>
+        </div>
+    </div>
+
+
+    <!-- <table id="csvTable"></table> -->
+
+    <script src="CSVToArray.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
