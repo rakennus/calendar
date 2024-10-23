@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV to HTML Table</title>
-    <style>
+    <style id="styleSheet">
         * {
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
         }
@@ -15,25 +15,25 @@
         }
 
         .parent {
-            display: flex;
-            /* Makes the children inline and responsive */
-            justify-content: space-between;
-            /* Space between items (optional) */
-            background-color: white;
-        }
-
-        .child {
-            flex: 1;
-            /* Makes each child take up equal width */
-            margin: 5px;
-            /* Adds some space between child divs */
-            box-sizing: border-box;
-            /* Ensures padding/margin/border is included in the width */
-            overflow: hidden;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 2px;
+            grid-auto-rows: 15px;
         }
 
         .event {
+            position: relative;
+            opacity: 0.5;
+        }
 
+        .event p {
+            margin: 0;
+        }
+
+        .time {
+            position: absolute;
+            bottom: 0;
+            left: 0;
         }
 
         .VO {
@@ -41,12 +41,14 @@
             color: white;
         }
 
-        .KO, .TU {
+        .KO,
+        .TU {
             background-color: yellow;
             color: black;
         }
 
-        .LU, .SE {
+        .LU,
+        .SE {
             background-color: lightblue;
             color: black;
         }
@@ -68,48 +70,75 @@
                 /* Stacks children vertically on smaller screens */
             }
         }
+
+        fieldset {
+            display: inline-block;
+        }
+
+        .menu {
+            display: flex;
+            margin: 20px 0 0 0;
+        }
+
+        .menu h1 {
+            margin: 0 0 20px 0;
+            white-space: nowrap;
+        }
+
+        .menu fieldset {
+            margin: 0 0 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .menu fieldset div {
+            flex-grow: 1;
+            align-content: center;
+            margin: 4px;
+        }
     </style>
+    <style id="tableStyle"></style>
 </head>
 
 <body>
-    <div>
-        <h1>CSV Data to Table</h1>
-        <input type="file" id="csvFile" accept=".csv">
+    <div class="menu">
+        <div style="display: inline-block;">
+            <h1>CSV Data to Table</h1>
+            <input type="file" id="csv_input" accept=".csv">
+        </div>
+
+        <fieldset id="typeSelect">
+            <legend>Course type shown</legend>
+
+            <div>
+                <input type="checkbox" name="lecture" value="VO" checked />
+                <label for="lecture">Vorlesungen</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="lecture" value="UE" checked />
+                <label for="lecture">Übungen</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="lecture" value="" checked />
+                <label for="lecture">Scales</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="lecture" value="" checked />
+                <label for="lecture">Scales</label>
+            </div>
+
+            <div>
+                <input type="checkbox" name="lecture" value="" checked />
+                <label for="lecture">Scales</label>
+            </div>
+        </fieldset>
     </div>
 
-    <div class="parent">
-        <div class="child">
-            <h1>Item 1</h1>
-            <div class="child-text">
-                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
-            </div>
-            <h2>end</h2>
-        </div>
-        <div class="child">
-            <h1>Item 2</h1>
-            <div class="child-text">
-                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
-            </div>
-            <h2>end</h2>
-        </div>
-        <div class="child">
-            <h1>Item 3</h1>
-            <div class="child-text">
-                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
-            </div>
-            <h2>end</h2>
-        </div>
-        <div class="child">
-            <h1>Item 4</h1>
-            <div class="child-text">
-                <p>Pellentesque id tortor nibh. Duis efficitur ipsum eu ante consequat tempus. Nulla hendrerit massa lacus, eget venenatis tortor maximus id. Nulla facilisi. Suspendisse quis rutrum enim, id vehicula mauris. Donec non iaculis augue. Fusce at enim egestas, maximus magna eget, viverra nibh. Aenean elementum dui a nunc dignissim elementum. Vestibulum sed rutrum nunc, id commodo erat. Donec imperdiet, lacus vitae facilisis pellentesque, justo tortor tempor ante, id facilisis neque urna in mauris.</p>
-            </div>
-            <h2>end</h2>
-        </div>
-    </div>
+    <div class="parent" id="table"></div>
 
-
-    <!-- <table id="csvTable"></table> -->
 
     <script src="CSVToArray.js"></script>
     <script src="index.js"></script>
