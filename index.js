@@ -68,8 +68,6 @@ function displayArray(array) {
 
         let maxOverlaps = 1
 
-        
-
         overlappingIntervals.forEach(e => {
             if (e.length > maxOverlaps) {
                 maxOverlaps = e.length
