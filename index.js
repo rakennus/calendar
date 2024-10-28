@@ -4,11 +4,28 @@ const tableStyle = document.getElementById("tableStyle")
 var container = document.getElementById("typeSelect")
 var checkboxesAll = container.querySelectorAll('input[type="checkbox"]');
 
+let lectureType = []
+
 checkboxesAll.forEach(element => {
+    if (!element.checked) {
+        lectureType.push(element.value)
+    }    
+
     element.addEventListener("click", function (test) {
-        console.log({ state: test.target.checked, value: test.target.value });
+        if (!test.target.checked) {
+            lectureType.push(test.target.value)
+        } else if (test.target.checked) {
+            const index = lectureType.indexOf(test.target.value);
+            if (index > -1) { // only splice array when item is found
+                lectureType.splice(index, 1); // 2nd parameter means remove one item only
+            }
+        }
+        
+        displayArray(data)
     })
 });
+
+let data;
 
 document.getElementById('csv_input').addEventListener('change', function (event) {
     const file = event.target.files[0];
@@ -34,19 +51,17 @@ document.getElementById('csv_input').addEventListener('change', function (event)
             objArray.push(obj)
         }
 
-        displayArray(objArray);
+        data = objArray;
+
+        displayArray(data);
     };
     reader.readAsText(file, 'ISO-8859-4');
 });
 
-function timeStringToFloat(time) {
-    var hoursMinutes = time.split(/[.:]/);
-    var hours = parseInt(hoursMinutes[0], 10);
-    var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
-    return hours + minutes / 60;
-}
 
 function displayArray(array) {
+    array = array.filter(item => !lectureType.includes(item.LV_ART))
+
     console.log(array);
 
     let weekdays = ['MO', 'DI', 'MI', 'DO', 'FR']
@@ -60,39 +75,40 @@ function displayArray(array) {
 
     parent.innerHTML = '';
 
+    let legends = document.createElement('div')
+    legends.classList.add("legends")
+    legends.classList.add("tableColumn")
+
+    for (let i = 0; i < 24; i++) {
+        let legendTime = document.createElement('p')
+        legendTime.classList.add("legendTime")
+
+        legendTime.style.gridRow = i*2+1 + "/" + ((i+1)*2+1)
+
+        legendTime.textContent = convertNumToTime(i/2+8+0.5);
+
+        legends.appendChild(legendTime);
+    }
+
+    parent.appendChild(legends)
+
     week.forEach((day, dayIndex) => {
         let tableColumn = document.createElement('div')
         tableColumn.classList.add("tableColumn")
 
-        let overlappingIntervals = findOverlappingIntervals(day);
+        console.log(weekdays[dayIndex]);
 
-        let maxOverlaps = 1
-
-        overlappingIntervals.forEach(e => {
-            if (e.length > maxOverlaps) {
-                maxOverlaps = e.length
-            }
-        });
+        let maxOverlaps = getMaxOverlaps(day)
 
         console.log(maxOverlaps);
-        console.log(overlappingIntervals);
 
-        day.forEach(event => {
+        day.forEach((event, eventIndex) => {
             let eventDiv = document.createElement('div')
             eventDiv.classList.add("event")
             eventDiv.classList.add(event.LV_ART)
             eventDiv.classList.add(event.WOCHENTAG)
-            eventDiv.classList.add("time" + (timeStringToFloat(event.VON) - 8) * 2)
 
-            let collision = false
-
-            overlappingIntervals.forEach(element => {
-                if (element.includes(event)) {
-                    collision = true
-                }
-            });
-
-            if (!collision) {
+            if (!hasCollision(eventIndex, day)) {
                 eventDiv.style.gridColumn = 1 + "/" + (maxOverlaps + 1)
             }
 
@@ -105,7 +121,8 @@ function displayArray(array) {
 
             let p2 = document.createElement('p');
             p2.classList.add("time")
-            p2.textContent = event.VON + " - " + event.BIS + " " + event.WOCHENTAG + " " + event.start + "/" + event.end;
+            // p2.textContent = event.VON + " - " + event.BIS + " " + event.WOCHENTAG + " " + event.start + "/" + event.end;
+            p2.textContent = event.ORT
             eventDiv.appendChild(p2)
 
             tableColumn.appendChild(eventDiv);
@@ -113,53 +130,6 @@ function displayArray(array) {
 
         parent.appendChild(tableColumn)
     });
-}
-
-function _displayArray(array) {
-    console.log(array);
-
-    parent.innerHTML = '';
-
-    array.forEach((event, rowIndex) => {
-        let eventDiv = document.createElement('div')
-        eventDiv.classList.add("event")
-        eventDiv.classList.add(event.LV_ART)
-        eventDiv.classList.add(event.WOCHENTAG)
-        eventDiv.classList.add("time" + (timeStringToFloat(event.VON) - 8) * 2)
-
-        eventDiv.setAttribute('style', 'grid-row: ' + (timeStringToFloat(event.VON) - 8) * 4 + "/" + (timeStringToFloat(event.BIS) - 8) * 4)
-
-        let p1 = document.createElement('p');
-        p1.textContent = event.TITEL;
-        eventDiv.appendChild(p1)
-
-        let p2 = document.createElement('p');
-        p2.classList.add("time")
-        p2.textContent = (timeStringToFloat(event.VON) - 8) * 4 + " " + event.VON + " - " + event.BIS + " " + event.WOCHENTAG + " " + (timeStringToFloat(event.VON) - 8) * 4 + "/" + (timeStringToFloat(event.BIS) - 8) * 4;
-        eventDiv.appendChild(p2)
-
-        parent.appendChild(eventDiv);
-    });
-
-
-    if (tableStyle.textContent != "") {
-        tableStyle.textContent = ""
-    }
-
-    var styles = ""
-
-    for (let i = 0; i < 8; i++) {
-        styles += ".time" + i + "{grid-row: " + i + "/" + (i + 1) + ";}"
-    }
-
-    let weekdays = ['MO', 'DI', 'MI', 'DO', 'FR']
-
-    weekdays.forEach((element, i) => {
-        i += 1
-        styles += "." + element + "{grid-column: " + i + "/" + (i + 1) + ";}"
-    });
-
-    tableStyle.textContent = styles
 }
 
 function detectSeparator(csvText) {
@@ -182,21 +152,74 @@ function detectSeparator(csvText) {
 
 
 // Find overlapping intervals
-function findOverlappingIntervals(intervals) {
-    const overlappingPairs = [];
+function getMaxOverlaps(intervals) {
+    let maxOverlaps = 1;
 
     // Iterate through the array and compare each pair of intervals
     for (let i = 0; i < intervals.length; i++) {
-        for (let j = i + 1; j < intervals.length; j++) {
-            if (doIntervalsOverlap(intervals[i], intervals[j])) {
-                overlappingPairs.push([intervals[i], intervals[j]]);
+        let overlaps = 1;
+        for (let j = 0; j < intervals.length; j++) {
+            if (j != i && doIntervalsOverlap(intervals[i], intervals[j])) {
+                overlaps++;
             }
         }
+
+        if (overlaps > maxOverlaps) {
+            maxOverlaps = overlaps
+        }
+        console.log(overlaps);
     }
 
-    return overlappingPairs;
+    return maxOverlaps;
+}
+
+// Find overlapping intervals
+function hasCollision(eventIndex, array) {
+    // Iterate through the array and compare each pair of intervals
+    for (let i = 0; i < array.length; i++) {
+        if (i != eventIndex && doIntervalsOverlap(array[eventIndex], array[i])) {
+            return true
+        }
+    }
+    return false;
 }
 
 function doIntervalsOverlap(interval1, interval2) {
     return interval1.start <= interval2.end && interval1.end >= interval2.start;
+}
+
+function timeStringToFloat(time) {
+    var hoursMinutes = time.split(/[.:]/);
+    var hours = parseInt(hoursMinutes[0], 10);
+    var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
+    return hours + minutes / 60;
+}
+
+function convertNumToTime(number) {
+    // Check sign of given number
+    var sign = (number >= 0) ? 1 : -1;
+
+    // Set positive value of number of sign negative
+    number = number * sign;
+
+    // Separate the int from the decimal part
+    var hour = Math.floor(number);
+    var decpart = number - hour;
+
+    var min = 1 / 60;
+    // Round to nearest minute
+    decpart = min * Math.round(decpart / min);
+
+    var minute = Math.floor(decpart * 60) + '';
+
+    // Add padding if need
+    if (minute.length < 2) {
+    minute = '0' + minute; 
+    }
+
+    // Add Sign in final result
+    sign = sign == 1 ? '' : '-';
+
+    // Return concated hours and minutes
+    return sign + hour + ':' + minute;
 }
