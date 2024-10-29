@@ -9,7 +9,7 @@ let lectureType = []
 checkboxesAll.forEach(element => {
     if (!element.checked) {
         lectureType.push(element.value)
-    }    
+    }
 
     element.addEventListener("click", function (test) {
         if (!test.target.checked) {
@@ -20,7 +20,7 @@ checkboxesAll.forEach(element => {
                 lectureType.splice(index, 1); // 2nd parameter means remove one item only
             }
         }
-        
+
         displayArray(data)
     })
 });
@@ -32,6 +32,10 @@ document.getElementById('csv_input').addEventListener('change', function (event)
 
     if (!file) return
 
+    fileProcess(file)
+});
+
+function fileProcess(file) {
     const reader = new FileReader();
 
     reader.onload = function (e) {
@@ -56,7 +60,7 @@ document.getElementById('csv_input').addEventListener('change', function (event)
         displayArray(data);
     };
     reader.readAsText(file, 'ISO-8859-4');
-});
+}
 
 
 function displayArray(array) {
@@ -83,9 +87,9 @@ function displayArray(array) {
         let legendTime = document.createElement('p')
         legendTime.classList.add("legendTime")
 
-        legendTime.style.gridRow = i*2+1 + "/" + ((i+1)*2+1)
+        legendTime.style.gridRow = i * 2 + 1 + "/" + ((i + 1) * 2 + 1)
 
-        legendTime.textContent = convertNumToTime(i/2+8+0.5);
+        legendTime.textContent = convertNumToTime(i / 2 + 8 + 0.5);
 
         legends.appendChild(legendTime);
     }
@@ -214,7 +218,7 @@ function convertNumToTime(number) {
 
     // Add padding if need
     if (minute.length < 2) {
-    minute = '0' + minute; 
+        minute = '0' + minute;
     }
 
     // Add Sign in final result
@@ -222,4 +226,40 @@ function convertNumToTime(number) {
 
     // Return concated hours and minutes
     return sign + hour + ':' + minute;
+}
+
+
+
+
+function dropHandler(ev) {
+    console.log("File(s) dropped");
+
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
+
+    if (ev.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        [...ev.dataTransfer.items].forEach((item, i) => {
+            // If dropped items aren't files, reject them
+            if (item.kind === "file") {
+                const file = item.getAsFile();
+                console.log(`… file[${i}].name = ${file.name}`);
+                fileProcess(file)
+            }
+        });
+    } else {
+        // Use DataTransfer interface to access the file(s)
+        [...ev.dataTransfer.files].forEach((file, i) => {
+            console.log(`… file[${i}].name = ${file.name}`);
+            fileProcess(file)
+
+        });
+    }
+}
+
+function dragOverHandler(ev) {
+    console.log("File(s) in drop zone");
+
+    // Prevent default behavior (Prevent file from being opened)
+    ev.preventDefault();
 }

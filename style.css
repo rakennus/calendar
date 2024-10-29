@@ -48,7 +48,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    right:  0;
+    right: 0;
 }
 
 .event .time {
@@ -105,3 +105,15 @@ fieldset {
     align-content: center;
     margin: 4px;
 }
+
+
+
+
+
+
+#drop_zone {
+    border: 5px solid blue;
+    width: 200px;
+    height: 100px;
+  }
+  

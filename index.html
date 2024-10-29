@@ -30,23 +30,24 @@
             </div>
 
             <div>
-                <input type="checkbox" name="lecture" value="" checked />
-                <label for="lecture">Scales</label>
+                <input type="checkbox" name="lecture" value="TU" checked />
+                <label for="lecture">Tutorien</label>
             </div>
 
             <div>
-                <input type="checkbox" name="lecture" value="" checked />
-                <label for="lecture">Scales</label>
+                <input type="checkbox" name="lecture" value="KO" checked />
+                <label for="lecture">Selbstrechenübung</label>
             </div>
 
-            <div>
-                <input type="checkbox" name="lecture" value="" checked />
-                <label for="lecture">Scales</label>
-            </div>
         </fieldset>
     </div>
 
     <div class="parent" id="table"></div>
+
+    <div id="drop_zone" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);">
+        <p>Drag one or more files to this <i>drop zone</i>.</p>
+    </div>
+
 
     <script src="CSVToArray.js"></script>
     <script src="index.js"></script>
